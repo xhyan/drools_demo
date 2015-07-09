@@ -4,6 +4,7 @@ import xhyan.drools.Promotion;
 dialect  "mvel"
 
 rule newMemberIn3Months
+
 salience 9
 no-loop true //对于本规则引起的fact变化(例如调用update，modify等)，只执行一次，但对于其他规则引起的无效
 activation-group "issue" //一个执行规则组，在同一个组内，只能有一个规则被执行
