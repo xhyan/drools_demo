@@ -1,5 +1,5 @@
-import xhyan.drools.Router;
-import xhyan.drools.Promotion;
+import xhyan.drools.point.PointDTO;
+import xhyan.drools.point.Promotion;
 
 dialect  "mvel"
 
@@ -10,12 +10,12 @@ no-loop true //对于本规则引起的fact变化(例如调用update，modify等
 activation-group "issue" //一个执行规则组，在同一个组内，只能有一个规则被执行
 lock-on-active true //no-loop的增强版，其他规则引起的工作内存中的fact变化时，规则也被执行一次
     when
-        $router:Router(newMemberIn3Months == true)  and $promotion:Promotion(inPromotion == true)
+        $pointDTO:PointDTO(newMemberIn3Months == true)  and $promotion:Promotion(inPromotion == true)
     then
      System.out.println("execute newMemberIn3Months rule!!");
-     $router.setPoint($router.getTotalAmount()*2 + $promotion.getPoint());
-     $router.setUsername("xhyan");          //不会引起重新执行
-     modify($router){
+     $pointDTO.setPoint($pointDTO.getTotalAmount()*2 + $promotion.getPoint());
+     $pointDTO.setUsername("xhyan");          //不会引起重新执行
+     modify($pointDTO){
         setUsername("xhyan"),setIssue(true)
      };
 end
@@ -23,15 +23,15 @@ end
 
 rule  consumeAtWeekend
 salience 8
-activation-group "issue"
+activation-group "issue1"
 lock-on-active true
     when
-        $router:Router(weekend == true)
+        $pointDTO:PointDTO(weekend == true)
     then
         System.out.printf("execute consumeAtWeekend rule!!");
-        $router.setPoint($router.getTotalAmount() * 2);     //双倍积分
-        $router.setIssue(true);
-        modify($router){setUsername("xhyan"),setIssue(true)};
+        $pointDTO.setPoint($pointDTO.getTotalAmount() * 2);     //双倍积分
+        $pointDTO.setIssue(true);
+        modify($pointDTO){setUsername("xhyan"),setIssue(true)};
 end
 
 //consume more than 10 times
@@ -39,14 +39,14 @@ rule consumeGT10Times
 salience 2
 no-loop true
 lock-on-active true
-activation-group "issue"
+activation-group "issue2"
 when
-    $router:Router(countOfMonth>=10)
+    $pointDTO:PointDTO(countOfMonth>=10)
 then
    System.out.println("execute rule 10 times!!");
-   $router.setPoint($router.getPoint()+88);
-   $router.setIssue(true);
-   modify($router){setUsername("xhyan"),setIssue(true)};
+   $pointDTO.setPoint($pointDTO.getPoint()+88);
+   $pointDTO.setIssue(true);
+   modify($pointDTO){setUsername("xhyan"),setIssue(true)};
 
 end
 
@@ -55,16 +55,16 @@ rule birthdayPoint
 salience 0
 no-loop false
 lock-on-active true
-activation-group "issue"
+activation-group "issue3"
 when
-    $router:Router(brithdayMonth == true)
+    $pointDTO:PointDTO(brithdayMonth == true)
 then
     System.out.println("execute birthday month!");
-    $router.setPoint(($router.getTotalAmount())*3);
+    $pointDTO.setPoint(($pointDTO.getTotalAmount())*3);
     //$pointDO.setWeekend(false);
     //update($pointDO);
-    $router.setIssue(true);
-    modify($router){setUsername("xhyan"),setIssue(true)};
+    $pointDTO.setIssue(true);
+    modify($pointDTO){setUsername("xhyan"),setIssue(true)};
 
 end
 

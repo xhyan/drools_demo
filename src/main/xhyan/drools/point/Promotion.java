@@ -1,4 +1,4 @@
-package xhyan.drools;
+package xhyan.drools.point;
 
 /**
  * 本期新增

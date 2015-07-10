@@ -1,0 +1,36 @@
+import xhyan.drools.router.PipeDTO;
+import xhyan.drools.router.PaymentDTO;
+import xhyan.drools.router.Router;
+import xhyan.drools.router.PaymentServiceImpl;
+import xhyan.drools.router.PaymentService;
+
+global Router router;
+global PaymentService paymentService;
+
+dialect  "mvel"
+
+//判断是否指定通道
+rule isPointPipe
+//执行优先级
+salience 9
+no-loop true //对于本规则引起的fact变化(例如调用update，modify等)，只执行一次，但对于其他规则引起的无效
+lock-on-active true //no-loop的增强版，其他规则引起的工作内存中的fact变化时，规则也被执行一次
+    when
+        $paymentDTO:PaymentDTO(pipeId != null && pipeId > 0)
+    then
+        paymentService.payment($paymentDTO);
+end
+
+//判断是否是商户指定通道
+rule isPartnerPointPipe
+//执行优先级
+salience 8
+    when
+        $paymentDTO:PaymentDTO() and $router:Router(isPartnerPointPipe($paymentDTO.getPartnerId(), $paymentDTO.getChannelId()))
+    then
+        paymentService.payment($paymentDTO);
+end
+
+//判断是否是人工优先
+
+//判断是否是渠道优先

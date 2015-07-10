@@ -1,4 +1,4 @@
-package xhyan.drools;
+package xhyan.drools.router;
 
 import org.drools.KnowledgeBase;
 import org.drools.KnowledgeBaseFactory;
@@ -10,19 +10,19 @@ import org.drools.io.ResourceFactory;
 import org.drools.runtime.StatefulKnowledgeSession;
 import org.drools.runtime.rule.Activation;
 import org.drools.runtime.rule.AgendaFilter;
+import xhyan.drools.RulesEngine;
 
 import java.util.List;
 
 
 /**
- * 规则引擎实现类
+ * 路由规则引擎实现
  */
-public class RulesEngineImpl implements RulesEngine {
+public class RouterRulesEngineImpl implements RulesEngine {
 
     private KnowledgeBase knowledgeBase;
 
-
-    public RulesEngineImpl () {
+    public RouterRulesEngineImpl () {
         init();
     }
 
@@ -35,7 +35,7 @@ public class RulesEngineImpl implements RulesEngine {
         System.setProperty("drools.dateformat", "yyyy-MM-dd HH:mm:ss");
 
         KnowledgeBuilder knowledgeBuilder = new KnowledgeBuilderFactory().newKnowledgeBuilder(config);
-        knowledgeBuilder.add(ResourceFactory.newClassPathResource("drools/point.drl"), ResourceType.DRL);
+        knowledgeBuilder.add(ResourceFactory.newClassPathResource("drools/router/router.drl"), ResourceType.DRL);
         if (knowledgeBuilder.hasErrors()){
             throw new RuntimeException("Rules has error! pls check it!" + knowledgeBuilder.getErrors());
         }
@@ -45,7 +45,8 @@ public class RulesEngineImpl implements RulesEngine {
     }
 
 
-    @Override public void excuteCuleEngine (List<Object> list) {
+    @Override
+    public void excuteCuleEngine (List<Object> list) {
         StatefulKnowledgeSession session = knowledgeBase.newStatefulKnowledgeSession();
         for (Object obj : list){
             session.insert(obj);

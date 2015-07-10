@@ -1,9 +1,9 @@
-package xhyan.drools;
+package xhyan.drools.point;
 
 /**
  * 路由对象.
  */
-public class Router {
+public class PointDTO {
 
     private String username;            //用户姓名
     private boolean brithdayMonth;      //是否是生日月
